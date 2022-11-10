@@ -1,16 +1,28 @@
-#File updated to test refactoring branch.
-
 #Classes
 
 class OnXs:
     def __init__(self, player_1, player_2):
         
-        self.game_board = [[" "," "," "],[" "," "," "],[" "," "," "]]
+        self.game_board = [
+                           [" "," "," "],
+                           [" "," "," "],
+                           [" "," "," "]
+                           ]
         self.player_1 = player_1
         self.player_2 = player_2
         self.game_won = False
         
         self.print_game_board()
+
+    def intro_screen():
+        print("Lets play naughts and crosses!")
+        print("\n")
+        print(f" X | X | 0 ")
+        print("-----------")
+        print(f" X | 0 | O ")
+        print("-----------")
+        print(f" 0 | O | X ")
+        print("\n")
 
     def print_game_board(self):
         print("\n")
@@ -21,6 +33,16 @@ class OnXs:
         print("    -----------")
         print(f" [C] {self.game_board[2][0]} | {self.game_board[2][1]} | {self.game_board[2][2]}")
         print("\n")
+
+    def make_move(self, player):
+        valid_move = False
+        while not valid_move:
+            move = player.choose_move(player.name)
+            valid_move = self.check_valid_move(move)
+            if valid_move:
+                self.update_game_board(move, player.playing_piece)
+            else:
+                print("Space taken. Try again: ")
 
     def check_valid_move(self, move):
         if move == "A1":
@@ -90,21 +112,29 @@ class OnXs:
             self.game_board[2][2] = playing_piece
 
     def check_for_win(self):
-        if self.game_board[0][0] != " " and self.game_board[0][0] == self.game_board[0][1] == self.game_board[0][2]:
+        if (self.game_board[0][0] != " " and 
+            self.game_board[0][0] == self.game_board[0][1] == self.game_board[0][2]):
             return True
-        if self.game_board[1][0] != " " and self.game_board[1][0] == self.game_board[1][1] == self.game_board[1][2]:
+        if (self.game_board[1][0] != " " and 
+            self.game_board[1][0] == self.game_board[1][1] == self.game_board[1][2]):
             return True
-        if self.game_board[2][0] != " " and self.game_board[2][0] == self.game_board[2][1] == self.game_board[2][2]:
+        if (self.game_board[2][0] != " " and 
+            self.game_board[2][0] == self.game_board[2][1] == self.game_board[2][2]):
             return True
-        if self.game_board[0][0] != " " and self.game_board[0][0] == self.game_board[1][1] == self.game_board[2][2]:
+        if (self.game_board[0][0] != " " and 
+            self.game_board[0][0] == self.game_board[1][1] == self.game_board[2][2]):
             return True
-        if self.game_board[0][2] != " " and self.game_board[0][2] == self.game_board[1][1] == self.game_board[2][0]:
+        if (self.game_board[0][2] != " " and 
+            self.game_board[0][2] == self.game_board[1][1] == self.game_board[2][0]):
             return True
-        if self.game_board[0][0] != " " and self.game_board[0][0] == self.game_board[1][0] == self.game_board[2][0]:
+        if (self.game_board[0][0] != " " and 
+            self.game_board[0][0] == self.game_board[1][0] == self.game_board[2][0]):
             return True
-        if self.game_board[0][1] != " " and self.game_board[0][1] == self.game_board[1][1] == self.game_board[2][1]:
+        if (self.game_board[0][1] != " " and 
+            self.game_board[0][1] == self.game_board[1][1] == self.game_board[2][1]):
             return True
-        if self.game_board[0][2] != " " and self.game_board[0][2] == self.game_board[1][2] == self.game_board[2][2]:
+        if (self.game_board[0][2] != " " and 
+            self.game_board[0][2] == self.game_board[1][2] == self.game_board[2][2]):
             return True
 
     def win_routine(self, player):
@@ -113,7 +143,7 @@ class OnXs:
         print("\n")
         print("****************************")
         print("\n")
-        print(f"{player.player_name} has won the game!")
+        print(f"{player.name} has won the game!")
         print("\n")
         print("****************************")
         print("\n")
@@ -128,44 +158,30 @@ Available at: https://en.wikipedia.org/wiki/Tic-tac-toe."
 
 class Player:
     def __init__(self):
-        self.player_name = ""
+        self.name = ""
         self.playing_piece = ""
         self.wins = 0
 
     def input_player_name(self):
-        while not self.player_name:
+        while not self.name:
             print("Please enter your name: ")
-            self.player_name = input()
+            self.name = input()
 
-    def make_a_move(self, player_name):
+    def choose_move(self, name):
         self.move = ""
         self.valid_moves = ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
-        print(f"{player_name} make your move!")
+        print(f"{name} make your move!")
         while self.move not in self.valid_moves:
             print("Please enter a valid column/row reference: ")
             self.move = input().upper()
         return self.move
 
 
-
-#Functions
-
-def intro_screen():
-    print("Lets play naughts and crosses!")
-    print("\n")
-    print(f" X | X | 0 ")
-    print("-----------")
-    print(f" X | 0 | O ")
-    print("-----------")
-    print(f" 0 | O | X ")
-    print("\n")
-
-
 #Main
 
 play_again = True
 
-intro_screen()
+OnXs.intro_screen()
 
 print("Player 1 will be \'Os\'")
 player_1 = Player()
@@ -183,32 +199,21 @@ print("Let's play!")
 
 while play_again:
     print("\n")
-    print(f"{player_1.player_name} has {player_1.wins} wins.")
-    print(f"{player_2.player_name} has {player_2.wins} wins.")
+    print(f"{player_1.name} has {player_1.wins} wins.")
+    print(f"{player_2.name} has {player_2.wins} wins.")
+
     game = OnXs(player_1, player_2)
 
     while not game.game_won:
-        valid_move = False
-        while not valid_move:
-            move = player_1.make_a_move(player_1.player_name)
-            valid_move = game.check_valid_move(move)
-            if valid_move:
-                game.update_game_board(move, player_1.playing_piece)
-            else:
-                print("Space taken. Try again: ")
+        game.make_move(player_1)
+
         game.print_game_board()
         if game.check_for_win():
             game.win_routine(player_1)
             continue
 
-        valid_move = False
-        while not valid_move:
-            move = player_2.make_a_move(player_2.player_name)
-            valid_move = game.check_valid_move(move)
-            if valid_move:
-                game.update_game_board(move, player_2.playing_piece)
-            else:
-                print("Space taken. Try again: ")
+        game.make_move(player_2)
+
         game.print_game_board()
         if game.check_for_win():
             game.win_routine(player_2)
@@ -219,9 +224,11 @@ while play_again:
     while True:
         print("Do you want to play again?")
         user_input = input()
+
         if user_input.lower() == 'y':
             play_again = True
             break
+
         elif user_input.lower() == 'n':
             play_again = False
             break
